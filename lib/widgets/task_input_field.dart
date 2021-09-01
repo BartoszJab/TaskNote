@@ -4,14 +4,26 @@ class TaskInputField extends StatelessWidget {
   final String? hintText;
   final bool isRequired;
   final Function(String?) onSaved;
+  final int? minLines;
+  final int? maxLines;
+  final int? maxLength;
 
   const TaskInputField(
-      {this.hintText, required this.isRequired, required this.onSaved});
+      {this.hintText,
+      required this.isRequired,
+      required this.onSaved,
+      this.minLines,
+      this.maxLines,
+      this.maxLength});
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      minLines: minLines,
+      maxLines: maxLines,
+      maxLength: maxLength,
       decoration: InputDecoration(
+        counterText: '',
         hintText: hintText,
         fillColor: Colors.white,
         filled: true,
