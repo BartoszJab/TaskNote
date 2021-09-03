@@ -7,6 +7,7 @@ class TaskInputField extends StatelessWidget {
   final int? minLines;
   final int? maxLines;
   final int? maxLength;
+  final String? initialValue;
 
   const TaskInputField(
       {this.hintText,
@@ -14,7 +15,8 @@ class TaskInputField extends StatelessWidget {
       required this.onSaved,
       this.minLines,
       this.maxLines,
-      this.maxLength});
+      this.maxLength,
+      this.initialValue});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,7 @@ class TaskInputField extends StatelessWidget {
         fillColor: Colors.white,
         filled: true,
       ),
-      initialValue: '',
+      initialValue: initialValue,
       validator: (String? value) {
         if (value!.isEmpty && isRequired) {
           return 'This field cannot be empty';
