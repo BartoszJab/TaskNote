@@ -1,8 +1,17 @@
+import 'package:daily_helper/models/task.dart';
+import 'package:daily_helper/providers/tasks_provider.dart';
 import 'package:daily_helper/screens/create_task.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
+
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +21,7 @@ class Home extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const CreateTask(),
+              builder: (context) => CreateTask(null),
             ),
           );
         },
@@ -21,9 +30,34 @@ class Home extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Daily helper'),
       ),
-      body: const Center(
-        child: Text('Test2'),
-      ),
-    );
+      body: Center(
+        child: FutureBuilder<List<Task>>(
+          future: Provider.of<TasksProvider>(context).getAllTasks(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(
+                child: Text('Loading tasks...'),
+              );
+            }
+            return snapshot.data!.isEmpty
+                ? const Center(child: Text('No tasks to display'))
+                : ListView.builder(
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  final currentTask = snapshot.data![index];
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => CreateTask(currentTask)));
+                    },
+                    child: Card(
+                      child: ListTile(
+                        title: Text(currentTask.title),
+                      ),
+                    ),
+                  );
+                });
+          },
+        ),
+      ),);
   }
 }
