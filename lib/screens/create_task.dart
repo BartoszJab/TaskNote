@@ -18,23 +18,22 @@ class CreateTask extends StatefulWidget {
 class _CreateTaskState extends State<CreateTask> {
   String? _title;
   String? _description;
+  List<Subtask> subtasks = [];
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  List<Subtask> testSubtasks = [
-    Subtask(subtaskText: 'buy pepsi', isChecked: false),
-    Subtask(subtaskText: 'help father', isChecked: true),
-    Subtask(subtaskText: 'buy vegetables', isChecked: true),
-    Subtask(subtaskText: 'buy taw', isChecked: true),
-    Subtask(subtaskText: 'buy taw', isChecked: true),
-    Subtask(subtaskText: 'buy taw', isChecked: true),
-    Subtask(subtaskText: 'buy taw', isChecked: true)
-  ];
+  final _subtaskFieldController = TextEditingController();
 
   final ScrollController _scrollController = ScrollController();
 
   @override
+  void initState() {
+    subtasks = [...?widget.currentTask?.subtasks];
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -80,20 +79,28 @@ class _CreateTaskState extends State<CreateTask> {
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Expanded(
+                  children: [
+                     Expanded(
                       child: TextField(
+                        controller: _subtaskFieldController,
                         minLines: 1,
                         maxLines: 4,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                             hintText: 'Subtask to add',
                             contentPadding:
-                            EdgeInsets.symmetric(horizontal: 10)),
+                                EdgeInsets.symmetric(horizontal: 10)),
                       ),
                     ),
-                    Icon(
-                      Icons.add_box_outlined,
-                      size: 40.0,
+                    IconButton(
+                      icon: const Icon(Icons.add_box_outlined, size: 40.0),
+                      onPressed: () {
+                        if (_subtaskFieldController.text.isNotEmpty) {
+                          setState(() {
+                            subtasks.add(Subtask(subtaskText: _subtaskFieldController.text, isChecked: false));
+                            _subtaskFieldController.text = '';
+                          });
+                        }
+                      },
                     )
                   ],
                 ),
@@ -109,9 +116,9 @@ class _CreateTaskState extends State<CreateTask> {
                     child: ListView.builder(
                         controller: _scrollController,
                         shrinkWrap: true,
-                        itemCount: testSubtasks.length,
+                        itemCount: subtasks.length,
                         itemBuilder: (context, index) {
-                          final subtask = testSubtasks[index];
+                          final subtask = subtasks[index];
                           return CheckboxListTile(
                             value: subtask.isChecked,
                             onChanged: (value) {
@@ -136,15 +143,14 @@ class _CreateTaskState extends State<CreateTask> {
 
                       await DatabaseHelper.instance
                           .add(Task(
-                          title: _title!,
-                          description: _description,
-                          subtasks: testSubtasks))
+                              title: _title!,
+                              description: _description,
+                              subtasks: subtasks))
                           .then((_) {
                         Provider.of<TasksProvider>(context, listen: false)
                             .refresh();
                         Navigator.pop(context);
-                      }
-                      );
+                      });
                     },
                     child: const Text(
                       'Add task',
@@ -163,13 +169,12 @@ class _CreateTaskState extends State<CreateTask> {
 
                         await DatabaseHelper.instance
                             .update(Task(
-                            id: widget.currentTask!.id,
-                            title: _title!,
-                            description: _description,
-                            subtasks: testSubtasks))
-                            .then((_) =>
-                            Provider.of<TasksProvider>(context,
-                                listen: false)
+                                id: widget.currentTask!.id,
+                                title: _title!,
+                                description: _description,
+                                subtasks: subtasks))
+                            .then((_) => Provider.of<TasksProvider>(context,
+                                    listen: false)
                                 .refresh());
                       },
                       child: const Text(
