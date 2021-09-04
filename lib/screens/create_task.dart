@@ -33,7 +33,6 @@ class _CreateTaskState extends State<CreateTask> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -80,7 +79,7 @@ class _CreateTaskState extends State<CreateTask> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                     Expanded(
+                    Expanded(
                       child: TextField(
                         controller: _subtaskFieldController,
                         minLines: 1,
@@ -96,7 +95,9 @@ class _CreateTaskState extends State<CreateTask> {
                       onPressed: () {
                         if (_subtaskFieldController.text.isNotEmpty) {
                           setState(() {
-                            subtasks.add(Subtask(subtaskText: _subtaskFieldController.text, isChecked: false));
+                            subtasks.add(Subtask(
+                                subtaskText: _subtaskFieldController.text,
+                                isChecked: false));
                             _subtaskFieldController.text = '';
                           });
                         }
@@ -126,6 +127,14 @@ class _CreateTaskState extends State<CreateTask> {
                                 subtask.isChecked = value;
                               });
                             },
+                            secondary: IconButton(
+                              icon: const Icon(Icons.highlight_remove_rounded),
+                              onPressed: () {
+                                setState(() {
+                                  subtasks.removeAt(index);
+                                });
+                              },
+                            ),
                             controlAffinity: ListTileControlAffinity.leading,
                             title: Text(subtask.subtaskText!),
                           );
