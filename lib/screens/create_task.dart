@@ -88,7 +88,7 @@ class _CreateTaskState extends State<CreateTask> {
                         decoration: InputDecoration(
                             hintText: 'Subtask to add',
                             contentPadding:
-                                EdgeInsets.symmetric(horizontal: 10)),
+                            EdgeInsets.symmetric(horizontal: 10)),
                       ),
                     ),
                     Icon(
@@ -136,12 +136,15 @@ class _CreateTaskState extends State<CreateTask> {
 
                       await DatabaseHelper.instance
                           .add(Task(
-                              title: _title!,
-                              description: _description,
-                              subtasks: testSubtasks))
-                          .then((_) =>
-                              Provider.of<TasksProvider>(context, listen: false)
-                                  .refresh());
+                          title: _title!,
+                          description: _description,
+                          subtasks: testSubtasks))
+                          .then((_) {
+                        Provider.of<TasksProvider>(context, listen: false)
+                            .refresh();
+                        Navigator.pop(context);
+                      }
+                      );
                     },
                     child: const Text(
                       'Add task',
@@ -160,12 +163,13 @@ class _CreateTaskState extends State<CreateTask> {
 
                         await DatabaseHelper.instance
                             .update(Task(
-                                id: widget.currentTask!.id,
-                                title: _title!,
-                                description: _description,
-                                subtasks: testSubtasks))
-                            .then((_) => Provider.of<TasksProvider>(context,
-                                    listen: false)
+                            id: widget.currentTask!.id,
+                            title: _title!,
+                            description: _description,
+                            subtasks: testSubtasks))
+                            .then((_) =>
+                            Provider.of<TasksProvider>(context,
+                                listen: false)
                                 .refresh());
                       },
                       child: const Text(
