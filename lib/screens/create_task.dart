@@ -4,6 +4,7 @@ import 'package:daily_helper/models/task.dart';
 import 'package:daily_helper/providers/tasks_provider.dart';
 import 'package:daily_helper/widgets/task_input_field.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 class CreateTask extends StatefulWidget {
@@ -44,8 +45,7 @@ class _CreateTaskState extends State<CreateTask> {
           ),
           title: const Text('Create task'),
         ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+        body: SafeArea(
           child: Form(
             key: _formKey,
             child: Column(
@@ -168,9 +168,18 @@ class _CreateTaskState extends State<CreateTask> {
                               title: _title!,
                               description: _description,
                               subtasks: _subtasks))
-                          .then((_) =>
-                              Provider.of<TasksProvider>(context, listen: false)
-                                  .refresh());
+                          .then((_) {
+                        Fluttertoast.showToast(
+                            msg: "Task has been updated",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            backgroundColor: Colors.green.withOpacity(0.8),
+                            textColor: Colors.white,
+                            fontSize: 16.0
+                        );
+                        Provider.of<TasksProvider>(context, listen: false)
+                            .refresh();
+                      });
                     }
                   },
                   child: Text(
@@ -184,4 +193,5 @@ class _CreateTaskState extends State<CreateTask> {
           ),
         ));
   }
+
 }
