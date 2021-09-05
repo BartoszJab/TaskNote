@@ -27,8 +27,7 @@ class TaskInputField extends StatelessWidget {
       decoration: InputDecoration(
         counterText: '',
         hintText: hintText,
-        fillColor: Colors.white,
-        filled: true,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 10)
       ),
       initialValue: initialValue,
       validator: (String? value) {

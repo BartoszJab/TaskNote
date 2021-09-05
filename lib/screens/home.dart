@@ -28,7 +28,7 @@ class _HomeState extends State<Home> {
         child: const Icon(Icons.add),
       ),
       appBar: AppBar(
-        title: const Text('Daily helper'),
+        title: const Text('Task note'),
       ),
       body: Center(
         child: FutureBuilder<List<Task>>(
