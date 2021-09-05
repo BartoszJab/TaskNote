@@ -43,7 +43,7 @@ class _CreateTaskState extends State<CreateTask> {
             },
             child: const Icon(Icons.arrow_back),
           ),
-          title: const Text('Create task'),
+          title: const Text('Task'),
         ),
         body: SafeArea(
           child: Form(
