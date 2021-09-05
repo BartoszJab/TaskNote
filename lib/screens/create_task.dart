@@ -108,7 +108,6 @@ class _CreateTaskState extends State<CreateTask> {
                 const SizedBox(
                   height: 10,
                 ),
-                // TODO: make list view fill available height
                 SizedBox(
                   height: 220,
                   child: Scrollbar(
@@ -142,7 +141,6 @@ class _CreateTaskState extends State<CreateTask> {
                   ),
                 ),
                 const Spacer(),
-                // TODO: toast when created/update task
                 TextButton(
                   onPressed: () async {
                     if (!_formKey.currentState!.validate()) return;
@@ -175,8 +173,7 @@ class _CreateTaskState extends State<CreateTask> {
                             gravity: ToastGravity.BOTTOM,
                             backgroundColor: Colors.green.withOpacity(0.8),
                             textColor: Colors.white,
-                            fontSize: 16.0
-                        );
+                            fontSize: 16.0);
                         Provider.of<TasksProvider>(context, listen: false)
                             .refresh();
                       });
@@ -184,8 +181,7 @@ class _CreateTaskState extends State<CreateTask> {
                   },
                   child: Text(
                     widget.currentTask == null ? 'Add task' : 'Update task',
-                    style: const TextStyle(
-                        fontSize: 25, fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                   ),
                 )
               ],
@@ -193,5 +189,4 @@ class _CreateTaskState extends State<CreateTask> {
           ),
         ));
   }
-
 }
