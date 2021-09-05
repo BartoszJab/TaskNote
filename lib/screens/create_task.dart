@@ -18,7 +18,7 @@ class CreateTask extends StatefulWidget {
 class _CreateTaskState extends State<CreateTask> {
   String? _title;
   String? _description;
-  List<Subtask> subtasks = [];
+  List<Subtask> _subtasks = [];
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _subtaskFieldController = TextEditingController();
@@ -27,7 +27,7 @@ class _CreateTaskState extends State<CreateTask> {
 
   @override
   void initState() {
-    subtasks = [...?widget.currentTask?.subtasks];
+    _subtasks = [...?widget.currentTask?.subtasks];
     super.initState();
   }
 
@@ -95,7 +95,7 @@ class _CreateTaskState extends State<CreateTask> {
                       onPressed: () {
                         if (_subtaskFieldController.text.isNotEmpty) {
                           setState(() {
-                            subtasks.add(Subtask(
+                            _subtasks.add(Subtask(
                                 subtaskText: _subtaskFieldController.text,
                                 isChecked: false));
                             _subtaskFieldController.text = '';
@@ -117,9 +117,9 @@ class _CreateTaskState extends State<CreateTask> {
                     child: ListView.builder(
                         controller: _scrollController,
                         shrinkWrap: true,
-                        itemCount: subtasks.length,
+                        itemCount: _subtasks.length,
                         itemBuilder: (context, index) {
-                          final subtask = subtasks[index];
+                          final subtask = _subtasks[index];
                           return CheckboxListTile(
                             value: subtask.isChecked,
                             onChanged: (value) {
@@ -131,7 +131,7 @@ class _CreateTaskState extends State<CreateTask> {
                               icon: const Icon(Icons.highlight_remove_rounded),
                               onPressed: () {
                                 setState(() {
-                                  subtasks.removeAt(index);
+                                  _subtasks.removeAt(index);
                                 });
                               },
                             ),
@@ -142,55 +142,43 @@ class _CreateTaskState extends State<CreateTask> {
                   ),
                 ),
                 const Spacer(),
-                // TODO: shorten this unclear if-else widget creation | toast when created/update task
-                if (widget.currentTask == null)
-                  TextButton(
-                    onPressed: () async {
-                      if (!_formKey.currentState!.validate()) return;
+                // TODO: toast when created/update task
+                TextButton(
+                  onPressed: () async {
+                    if (!_formKey.currentState!.validate()) return;
 
-                      _formKey.currentState!.save();
-
+                    _formKey.currentState!.save();
+                    // if null then task doesn't exist so create one
+                    if (widget.currentTask == null) {
                       await DatabaseHelper.instance
                           .add(Task(
                               title: _title!,
                               description: _description,
-                              subtasks: subtasks))
+                              subtasks: _subtasks))
                           .then((_) {
                         Provider.of<TasksProvider>(context, listen: false)
                             .refresh();
                         Navigator.pop(context);
                       });
-                    },
-                    child: const Text(
-                      'Add task',
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  )
-                else
-                  TextButton(
-                      onPressed: () async {
-                        if (!_formKey.currentState!.validate()) return;
-
-                        _formKey.currentState!.save();
-
-                        await DatabaseHelper.instance
-                            .update(Task(
-                                id: widget.currentTask!.id,
-                                title: _title!,
-                                description: _description,
-                                subtasks: subtasks))
-                            .then((_) => Provider.of<TasksProvider>(context,
-                                    listen: false)
-                                .refresh());
-                      },
-                      child: const Text(
-                        'Update',
-                        style: TextStyle(
-                            fontSize: 25, fontWeight: FontWeight.bold),
-                      )),
+                    } // else task exists so update it
+                    else {
+                      await DatabaseHelper.instance
+                          .update(Task(
+                              id: widget.currentTask!.id,
+                              title: _title!,
+                              description: _description,
+                              subtasks: _subtasks))
+                          .then((_) =>
+                              Provider.of<TasksProvider>(context, listen: false)
+                                  .refresh());
+                    }
+                  },
+                  child: Text(
+                    widget.currentTask == null ? 'Add task' : 'Update task',
+                    style: const TextStyle(
+                        fontSize: 25, fontWeight: FontWeight.bold),
+                  ),
+                )
               ],
             ),
           ),
