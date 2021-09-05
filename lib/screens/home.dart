@@ -55,6 +55,12 @@ class _HomeState extends State<Home> {
                         child: Card(
                           child: ListTile(
                             title: Text(currentTask.title),
+                            subtitle: (currentTask.subtasks == null ||
+                                    currentTask.subtasks!.isEmpty)
+                                ? null
+                                : Text('Subtasks done: '
+                                    '${currentTask.subtasks!.where((subtask) => subtask.isChecked == true).toList().length}'
+                                    ' / ${currentTask.subtasks!.length}'),
                             trailing: IconButton(
                               icon: const Icon(Icons.delete_forever),
                               onPressed: () {
