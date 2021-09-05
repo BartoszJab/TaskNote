@@ -51,7 +51,7 @@ class _CreateTaskState extends State<CreateTask> {
             child: Column(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
                   child: Column(children: [
                     TaskInputField(
                       initialValue: widget.currentTask?.title,
@@ -146,47 +146,50 @@ class _CreateTaskState extends State<CreateTask> {
                   ),
                 ),
                 const Spacer(),
-                TextButton(
-                  onPressed: () async {
-                    if (!_formKey.currentState!.validate()) return;
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 15.0),
+                  child: TextButton(
+                    onPressed: () async {
+                      if (!_formKey.currentState!.validate()) return;
 
-                    _formKey.currentState!.save();
-                    // if null then task doesn't exist so create one
-                    if (widget.currentTask == null) {
-                      await DatabaseHelper.instance
-                          .add(Task(
-                              title: _title!,
-                              description: _description,
-                              subtasks: _subtasks))
-                          .then((_) {
-                        Provider.of<TasksProvider>(context, listen: false)
-                            .refresh();
-                        Navigator.pop(context);
-                      });
-                    } // else task exists so update it
-                    else {
-                      await DatabaseHelper.instance
-                          .update(Task(
-                              id: widget.currentTask!.id,
-                              title: _title!,
-                              description: _description,
-                              subtasks: _subtasks))
-                          .then((_) {
-                        Fluttertoast.showToast(
-                            msg: "Task has been updated",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.BOTTOM,
-                            backgroundColor: Colors.green.withOpacity(0.8),
-                            textColor: Colors.white,
-                            fontSize: 16.0);
-                        Provider.of<TasksProvider>(context, listen: false)
-                            .refresh();
-                      });
-                    }
-                  },
-                  child: Text(
-                    widget.currentTask == null ? 'Add task' : 'Update task',
-                    style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                      _formKey.currentState!.save();
+                      // if null then task doesn't exist so create one
+                      if (widget.currentTask == null) {
+                        await DatabaseHelper.instance
+                            .add(Task(
+                                title: _title!,
+                                description: _description,
+                                subtasks: _subtasks))
+                            .then((_) {
+                          Provider.of<TasksProvider>(context, listen: false)
+                              .refresh();
+                          Navigator.pop(context);
+                        });
+                      } // else task exists so update it
+                      else {
+                        await DatabaseHelper.instance
+                            .update(Task(
+                                id: widget.currentTask!.id,
+                                title: _title!,
+                                description: _description,
+                                subtasks: _subtasks))
+                            .then((_) {
+                          Fluttertoast.showToast(
+                              msg: "Task has been updated",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              backgroundColor: Colors.green.withOpacity(0.8),
+                              textColor: Colors.white,
+                              fontSize: 16.0);
+                          Provider.of<TasksProvider>(context, listen: false)
+                              .refresh();
+                        });
+                      }
+                    },
+                    child: Text(
+                      widget.currentTask == null ? 'Add task' : 'Update task',
+                      style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                    ),
                   ),
                 )
               ],
