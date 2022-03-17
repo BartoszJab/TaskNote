@@ -14,19 +14,20 @@ class RemoveTaskAlert extends StatelessWidget {
     return AlertDialog(
       title: const Text('Remove task'),
       content: Text(
-          'Do you want to remove "${task.title}" task?'),
+        'Do you want to remove "${task.title}" task?',
+      ),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(
-              context, 'Cancel'),
+            context,
+            'Cancel',
+          ),
           child: const Text('Cancel'),
         ),
         TextButton(
           onPressed: () async {
             // remove task
-            await DatabaseHelper.instance
-                .remove(task.id!)
-                .then((_)  {
+            await DatabaseHelper.instance.remove(task.id!).then((_) {
               Provider.of<TasksProvider>(context, listen: false).refresh();
               Navigator.pop(context, 'OK');
             });

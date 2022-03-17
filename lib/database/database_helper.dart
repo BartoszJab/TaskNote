@@ -1,4 +1,3 @@
-
 import 'package:daily_helper/models/task.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -17,7 +16,7 @@ class DatabaseHelper {
   Future<Database> _initDatabase() async {
     final documentsDirectory = await getApplicationDocumentsDirectory();
     final String path = join(documentsDirectory.path, 'task.db');
-    return await openDatabase(
+    return openDatabase(
       path,
       version: 1,
       onCreate: _createDb,
@@ -25,14 +24,16 @@ class DatabaseHelper {
   }
 
   Future<void> _createDb(Database db, int version) async {
-    await db.execute('''
+    await db.execute(
+      '''
       CREATE TABLE task(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         title TEXT NOT NULL,
         description TEXT,
         subtasks TEXT
       )
-      ''');
+      ''',
+    );
   }
 
   Future<List<Task>> getAllTasks() async {
@@ -45,17 +46,17 @@ class DatabaseHelper {
 
   Future<int> add(Task task) async {
     final Database db = await instance.database;
-    return await db.insert('task', task.toMap());
+    return db.insert('task', task.toMap());
   }
 
   Future<int> remove(int id) async {
     final Database db = await instance.database;
-    return await db.delete('task', where: 'id = ?', whereArgs: [id]);
+    return db.delete('task', where: 'id = ?', whereArgs: [id]);
   }
 
   Future<int> update(Task task) async {
     final Database db = await instance.database;
-    return await db.update('task', task.toMap(), where: 'id = ?', whereArgs: [task.id]);
+    return db
+        .update('task', task.toMap(), where: 'id = ?', whereArgs: [task.id]);
   }
-
 }

@@ -35,24 +35,25 @@ class _CreateTaskState extends State<CreateTask> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          leading: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: const Icon(Icons.arrow_back),
-          ),
-          title: const Text('Task'),
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: const Icon(Icons.arrow_back),
         ),
-        body: SafeArea(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
-                  child: Column(children: [
+        title: const Text('Task'),
+      ),
+      body: SafeArea(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+                child: Column(
+                  children: [
                     TaskInputField(
                       initialValue: widget.currentTask?.title,
                       maxLength: 40,
@@ -88,9 +89,10 @@ class _CreateTaskState extends State<CreateTask> {
                             minLines: 1,
                             maxLines: 4,
                             decoration: const InputDecoration(
-                                hintText: 'Subtask to add',
-                                contentPadding:
-                                EdgeInsets.symmetric(horizontal: 10)),
+                              hintText: 'Subtask to add',
+                              contentPadding:
+                                  EdgeInsets.symmetric(horizontal: 10),
+                            ),
                           ),
                         ),
                         IconButton(
@@ -98,9 +100,12 @@ class _CreateTaskState extends State<CreateTask> {
                           onPressed: () {
                             if (_subtaskFieldController.text.isNotEmpty) {
                               setState(() {
-                                _subtasks.add(Subtask(
+                                _subtasks.add(
+                                  Subtask(
                                     subtaskText: _subtaskFieldController.text,
-                                    isChecked: false));
+                                    isChecked: false,
+                                  ),
+                                );
                                 _subtaskFieldController.text = '';
                               });
                             }
@@ -108,93 +113,106 @@ class _CreateTaskState extends State<CreateTask> {
                         )
                       ],
                     ),
-                  ],),
+                  ],
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
-                SizedBox(
-                  height: 220,
-                  child: Scrollbar(
-                    isAlwaysShown: true,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              SizedBox(
+                height: 220,
+                child: Scrollbar(
+                  isAlwaysShown: true,
+                  controller: _scrollController,
+                  child: ListView.builder(
                     controller: _scrollController,
-                    child: ListView.builder(
-                        controller: _scrollController,
-                        shrinkWrap: true,
-                        itemCount: _subtasks.length,
-                        itemBuilder: (context, index) {
-                          final subtask = _subtasks[index];
-                          return CheckboxListTile(
-                            value: subtask.isChecked,
-                            onChanged: (value) {
-                              setState(() {
-                                subtask.isChecked = value;
-                              });
-                            },
-                            secondary: IconButton(
-                              icon: const Icon(Icons.highlight_remove_rounded),
-                              onPressed: () {
-                                setState(() {
-                                  _subtasks.removeAt(index);
-                                });
-                              },
-                            ),
-                            controlAffinity: ListTileControlAffinity.leading,
-                            title: Text(subtask.subtaskText!),
-                          );
-                        }),
+                    shrinkWrap: true,
+                    itemCount: _subtasks.length,
+                    itemBuilder: (context, index) {
+                      final subtask = _subtasks[index];
+                      return CheckboxListTile(
+                        value: subtask.isChecked,
+                        onChanged: (value) {
+                          setState(() {
+                            subtask.isChecked = value;
+                          });
+                        },
+                        secondary: IconButton(
+                          icon: const Icon(Icons.highlight_remove_rounded),
+                          onPressed: () {
+                            setState(() {
+                              _subtasks.removeAt(index);
+                            });
+                          },
+                        ),
+                        controlAffinity: ListTileControlAffinity.leading,
+                        title: Text(subtask.subtaskText!),
+                      );
+                    },
                   ),
                 ),
-                const Spacer(),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 15.0),
-                  child: TextButton(
-                    onPressed: () async {
-                      if (!_formKey.currentState!.validate()) return;
+              ),
+              const Spacer(),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 15.0),
+                child: TextButton(
+                  onPressed: () async {
+                    if (!_formKey.currentState!.validate()) return;
 
-                      _formKey.currentState!.save();
-                      // if null then task doesn't exist so create one
-                      if (widget.currentTask == null) {
-                        await DatabaseHelper.instance
-                            .add(Task(
-                                title: _title!,
-                                description: _description,
-                                subtasks: _subtasks))
-                            .then((_) {
-                          Provider.of<TasksProvider>(context, listen: false)
-                              .refresh();
-                          Navigator.pop(context);
-                        });
-                      } // else task exists so update it
-                      else {
-                        await DatabaseHelper.instance
-                            .update(Task(
-                                id: widget.currentTask!.id,
-                                title: _title!,
-                                description: _description,
-                                subtasks: _subtasks))
-                            .then((_) {
-                          Fluttertoast.showToast(
-                              msg: "Task has been updated",
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                              backgroundColor: Colors.green.withOpacity(0.8),
-                              textColor: Colors.white,
-                              fontSize: 16.0);
-                          Provider.of<TasksProvider>(context, listen: false)
-                              .refresh();
-                        });
-                      }
-                    },
-                    child: Text(
-                      widget.currentTask == null ? 'Add task' : 'Update task',
-                      style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                    _formKey.currentState!.save();
+                    // if null then task doesn't exist so create one
+                    if (widget.currentTask == null) {
+                      await DatabaseHelper.instance
+                          .add(
+                        Task(
+                          title: _title!,
+                          description: _description,
+                          subtasks: _subtasks,
+                        ),
+                      )
+                          .then((_) {
+                        Provider.of<TasksProvider>(context, listen: false)
+                            .refresh();
+                        Navigator.pop(context);
+                      });
+                    } // else task exists so update it
+                    else {
+                      await DatabaseHelper.instance
+                          .update(
+                        Task(
+                          id: widget.currentTask!.id,
+                          title: _title!,
+                          description: _description,
+                          subtasks: _subtasks,
+                        ),
+                      )
+                          .then((_) {
+                        Fluttertoast.showToast(
+                          msg: "Task has been updated",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          backgroundColor: Colors.green.withOpacity(0.8),
+                          textColor: Colors.white,
+                          fontSize: 16.0,
+                        );
+                        Provider.of<TasksProvider>(context, listen: false)
+                            .refresh();
+                      });
+                    }
+                  },
+                  child: Text(
+                    widget.currentTask == null ? 'Add task' : 'Update task',
+                    style: const TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                )
-              ],
-            ),
+                ),
+              )
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

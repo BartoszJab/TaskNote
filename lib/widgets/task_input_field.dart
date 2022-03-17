@@ -9,14 +9,15 @@ class TaskInputField extends StatelessWidget {
   final int? maxLength;
   final String? initialValue;
 
-  const TaskInputField(
-      {this.hintText,
-      required this.isRequired,
-      required this.onSaved,
-      this.minLines,
-      this.maxLines,
-      this.maxLength,
-      this.initialValue});
+  const TaskInputField({
+    this.hintText,
+    required this.isRequired,
+    required this.onSaved,
+    this.minLines,
+    this.maxLines,
+    this.maxLength,
+    this.initialValue,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,7 @@ class TaskInputField extends StatelessWidget {
       decoration: InputDecoration(
         counterText: '',
         hintText: hintText,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 10)
+        contentPadding: const EdgeInsets.symmetric(horizontal: 10),
       ),
       initialValue: initialValue,
       validator: (String? value) {

@@ -6,7 +6,7 @@ class Subtask {
 
   Map toJson() => {'subtaskText': subtaskText, 'isChecked': isChecked};
 
-  Subtask.fromJson(Map<String, dynamic> json) :
-      subtaskText = json['subtaskText'] as String?,
-      isChecked = json['isChecked'] as bool?;
+  Subtask.fromJson(Map<String, dynamic> json)
+      : subtaskText = json['subtaskText'] as String?,
+        isChecked = json['isChecked'] as bool?;
 }

@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-          accentColor: Colors.red,
+        colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.red),
       ),
       debugShowCheckedModeBanner: false,
       home: const Home(),

@@ -48,9 +48,11 @@ class _HomeState extends State<Home> {
                       return GestureDetector(
                         onTap: () {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => CreateTask(currentTask)));
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => CreateTask(currentTask),
+                            ),
+                          );
                         },
                         child: Card(
                           child: ListTile(
@@ -58,22 +60,26 @@ class _HomeState extends State<Home> {
                             subtitle: (currentTask.subtasks == null ||
                                     currentTask.subtasks!.isEmpty)
                                 ? null
-                                : Text('Subtasks done: '
+                                : Text(
+                                    'Subtasks done: '
                                     '${currentTask.subtasks!.where((subtask) => subtask.isChecked == true).toList().length}'
-                                    ' / ${currentTask.subtasks!.length}'),
+                                    ' / ${currentTask.subtasks!.length}',
+                                  ),
                             trailing: IconButton(
                               icon: const Icon(Icons.delete_forever),
                               onPressed: () {
                                 showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        RemoveTaskAlert(currentTask));
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      RemoveTaskAlert(currentTask),
+                                );
                               },
                             ),
                           ),
                         ),
                       );
-                    });
+                    },
+                  );
           },
         ),
       ),
