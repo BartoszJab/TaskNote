@@ -4,7 +4,6 @@ import 'package:daily_helper/models/task.dart';
 import 'package:daily_helper/providers/tasks_provider.dart';
 import 'package:daily_helper/widgets/task_input_field.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 class CreateTask extends StatefulWidget {
@@ -32,6 +31,13 @@ class _CreateTaskState extends State<CreateTask> {
     _dbHelper = DatabaseHelper.instance;
     _subtasks = [...?widget.currentTask?.subtasks];
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _subtaskFieldController.dispose();
+    _scrollController.dispose();
+    super.dispose();
   }
 
   Future<void> createOrUpdateTask() async {
