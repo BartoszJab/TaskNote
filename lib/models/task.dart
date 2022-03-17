@@ -1,8 +1,9 @@
 import 'dart:convert';
 
 import 'package:daily_helper/models/subtask.dart';
+import 'package:equatable/equatable.dart';
 
-class Task {
+class Task extends Equatable {
   final int? id;
   final String title;
   final String? description;
@@ -14,7 +15,7 @@ class Task {
     // jsonDecode(json['subtasks']) returns an array of maps with Subtask fields
     final jsonSubtasks = jsonDecode(json['subtasks'] as String);
     final List<Subtask> subtasksList = [];
-    for (final jsonMap in jsonSubtasks){
+    for (final jsonMap in jsonSubtasks) {
       // we convert current map to a Subtask object and add it to a list
       final subtask = Subtask.fromJson(jsonMap as Map<String, dynamic>);
       subtasksList.add(subtask);
@@ -37,4 +38,7 @@ class Task {
       'subtasks': jsonSubtasks,
     };
   }
+
+  @override
+  List<Object?> get props => [title, description, subtasks];
 }

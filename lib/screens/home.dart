@@ -1,6 +1,6 @@
 import 'package:daily_helper/models/task.dart';
 import 'package:daily_helper/providers/tasks_provider.dart';
-import 'package:daily_helper/screens/create_task.dart';
+import 'package:daily_helper/screens/create_update_task.dart';
 import 'package:daily_helper/widgets/remove_task_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
